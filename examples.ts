@@ -10,6 +10,9 @@ try {
     const driver = await samsara.get_driver(1234567890)
     console.log('driver',driver)
 
+    const drivers = await samsara.find_drivers()
+    console.log('drivers',drivers.length)
+    
 } catch (error) {
     console.error(error.message)
 }
