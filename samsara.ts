@@ -1,4 +1,4 @@
-import { DriverUpdateType } from './types.ts'
+import { DriverUpdateType, DriverCreateType } from './types.ts'
 
 export class Samsara {
 
@@ -107,8 +107,50 @@ export class Samsara {
           });
       }
 
-  });
+    });
 
+  }
+
+  create_driver = async (
+    driver: DriverCreateType
+  ) => {  
+
+    // data cleansing
+    driver.phone = driver.phone ? driver.phone.replace(/[^0-9]/g, "") : undefined;
+
+    return await fetch(`https://api.samsara.com/fleet/drivers`, {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          Authorization: `Bearer ${this.access_token}`,
+          'Content-Type': "application/json",
+        },
+        body: JSON.stringify(driver)
+      })
+    .then((response) => {
+        if (!response.ok) {
+            return Promise.reject(response);
+        }
+        return response.json();
+    })
+    .then((content) => content.data)
+    .catch((response) => {
+
+      const response_status = `${response.statusText} [${response.status}]`;
+      const content_type = response.headers.get("content-type");
+
+      if (content_type && content_type.indexOf("application/json") !== -1) {
+          return response.json().then((data: any) => {
+            throw new Error(`${response_status} - ${data.message}`);
+          });
+      } else {
+          return response.text().then((text: string) => {
+            throw new Error(`${response_status} - ${text}`);
+          });
+      }
+
+    });
+    
   }
 
 }
