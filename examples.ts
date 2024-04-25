@@ -7,7 +7,12 @@ try {
 
     const samsara = new Samsara(env.SAMSARA_ACCESS_TOKEN);
 
-    const driver = await samsara.get_driver(1234567890)
+    let driver = await samsara.update_driver(1234567890, {
+        notes: 'lorem ipsum'
+    });
+    console.log('driver',driver)
+
+    driver = await samsara.get_driver(1234567890)
     console.log('driver',driver)
 
     const drivers = await samsara.find_drivers()
