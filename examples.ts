@@ -7,6 +7,12 @@ try {
 
     const samsara = new Samsara(env.SAMSARA_ACCESS_TOKEN);
 
+    const when = new Date(new Date().setHours(0,0,0,0)).toLocaleString();
+    console.log('when',when)
+
+    const statistics = await samsara.get_vehicle_statistics([], when, ['obdOdometerMeters'])
+    console.log('statistics',statistics)
+
     let driver = await samsara.create_driver({
         name: 'Foo Bar',
         username: 'foobar',
@@ -24,7 +30,7 @@ try {
 
     const drivers = await samsara.find_drivers()
     console.log('drivers',drivers.length)
-    
+
 } catch (error) {
     console.error(error.message)
 }
